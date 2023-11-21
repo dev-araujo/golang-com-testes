@@ -1,13 +1,8 @@
 package main
 
-import "fmt"
-
-const spanish = "espanhol"
-const french = "francês"
-
-const hello = "Hello, "
-const hola = "Hola, "
-const bonjour = "Bonjour, "
+import (
+	"fmt"
+)
 
 func Hello(name string, lang string) string {
 	if name == "" {
