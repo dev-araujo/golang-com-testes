@@ -1,9 +1,0 @@
-go 1.23
-
-use (
-	./hello
-	./integers
-	./iteration
-	./sum
-	./perimetro
-)
