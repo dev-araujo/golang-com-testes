@@ -13,5 +13,5 @@ func (c Carteira) Depositar(quantidade int) {
 
 func (c Carteira) Saldo() int {
 
-	return saldo
+	return c.saldo
 }
