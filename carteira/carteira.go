@@ -1,17 +1,40 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
-type Carteira struct {
-	saldo int
+type Bitcoin int
+
+type Stringer interface {
+	String() string
 }
 
-func (c Carteira) Depositar(quantidade int) {
-	fmt.Printf("O endereço do saldo Depositar é %v \v", &c.saldo)
+type Carteira struct {
+	saldo Bitcoin
+}
+
+func (b Bitcoin) String() string {
+	return fmt.Sprintf("%d BTC", b)
+}
+
+func (c *Carteira) Depositar(quantidade Bitcoin) {
 	c.saldo += quantidade
 }
 
-func (c Carteira) Saldo() int {
+func (c *Carteira) Retirar(quantidade Bitcoin) error {
+
+	if quantidade > c.saldo {
+		return errors.New("Saldo insuficiente")
+	}
+	c.saldo -= quantidade
+
+	return nil
+
+}
+
+func (c *Carteira) Saldo() Bitcoin {
 
 	return c.saldo
 }
