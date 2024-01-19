@@ -7,15 +7,34 @@ import (
 	"time"
 )
 
-func Contagem(saida io.Writer) {
-	for i := 3; i > 0; i-- {
-		time.Sleep(1 * time.Second)
+type Sleeper interface {
+	Sleep()
+}
+
+type SleeperPadrao struct{}
+
+func (d *SleeperPadrao) Sleep() {
+	time.Sleep(1 * time.Second)
+}
+
+const ultimaPalavra = "Vai!"
+const inicioContagem = 3
+
+func Contagem(saida io.Writer, sleeper Sleeper) {
+	for i := inicioContagem; i > 0; i-- {
+		sleeper.Sleep()
 		fmt.Fprintln(saida, i)
 	}
-	time.Sleep(1 * time.Second)
-	fmt.Fprint(saida, "Vai!")
+
+	for i := inicioContagem; i > 0; i-- {
+		fmt.Fprintln(saida, i)
+	}
+
+	sleeper.Sleep()
+	fmt.Fprint(saida, ultimaPalavra)
 }
 
 func main() {
-	Contagem(os.Stdout)
+	sleeper := &SleeperPadrao{}
+	Contagem(os.Stdout, sleeper)
 }
