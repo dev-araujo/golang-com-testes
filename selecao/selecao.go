@@ -1,22 +1,33 @@
 package corredor
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 )
 
-func Corredor(a, b string) (vencedor string) {
-	inicioA := time.Now()
-	http.Get(a)
-	duracaoA := time.Since(inicioA)
+var limiteDeDezSegundos = 10 * time.Second
 
-	inicioB := time.Now()
-	http.Get(b)
-	duracaoB := time.Since(inicioB)
+func Corredor(a, b string) (vencedor string, erro error) {
+	return Configuravel(a, b, limiteDeDezSegundos)
+}
 
-	if duracaoA < duracaoB {
-		return a
+func Configuravel(a, b string, tempoLimite time.Duration) (vencedor string, erro error) {
+	select {
+	case <-ping(a):
+		return a, nil
+	case <-ping(b):
+		return b, nil
+	case <-time.After(tempoLimite):
+		return "", fmt.Errorf("tempo limite de espera excedido para %s e %s", a, b)
 	}
+}
 
-	return b
+func ping(URL string) chan bool {
+	ch := make(chan bool)
+	go func() {
+		http.Get(URL)
+		close(ch)
+	}()
+	return ch
 }
